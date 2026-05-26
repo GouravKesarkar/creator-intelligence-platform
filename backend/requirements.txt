@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+openai
+youtube-transcript-api
+sqlalchemy
+psycopg2-binary
+pydantic
+httpx

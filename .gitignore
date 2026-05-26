@@ -1,0 +1,58 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+
+venv/
+.env/
+
+# Environment Variables
+
+.env
+
+# IDE
+
+.vscode/
+.idea/
+
+# OS Files
+
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
+
+# Pytest / Coverage
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Database
+
+*.db
+*.sqlite3
+
+# Build
+
+dist/
+build/
+
+# Node Modules (future frontend)
+
+node_modules/
+
+# FastAPI
+
+*.pid
+
+# Mac/Linux temp
+
+*.swp
+*.swo
