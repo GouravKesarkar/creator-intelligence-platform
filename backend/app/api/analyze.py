@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from app.ai.hook_analyzer import analyze_hook
+
 
 from app.youtube.youtube_service import (
     extract_video_id,
@@ -35,7 +37,14 @@ async def analyze_video(request: AnalyzeRequest):
 
     transcript = get_video_transcript(video_id)
 
+    hook_analysis = None
+
+    if "full_transcript" in transcript:
+        first_part = transcript["full_transcript"][:3000]
+        hook_analysis = analyze_hook(first_part)
+
     return {
         "metadata": metadata,
-        "transcript": transcript
+        "transcript": transcript,
+        "hook_analysis": hook_analysis
     }

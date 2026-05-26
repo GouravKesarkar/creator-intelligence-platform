@@ -21,6 +21,7 @@ def extract_video_id(youtube_url: str):
 
 
 def get_video_metadata(video_id: str):
+    print("VIDEO ID:", video_id)
 
     url = (
         "https://www.googleapis.com/youtube/v3/videos"
@@ -35,6 +36,8 @@ def get_video_metadata(video_id: str):
     response = requests.get(url, params=params)
 
     data = response.json()
+
+    print("YOUTUBE RESPONSE:", data)
 
     items = data.get("items")
 
