@@ -3,7 +3,8 @@ from pydantic import BaseModel
 
 from app.youtube.youtube_service import (
     extract_video_id,
-    get_video_metadata
+    get_video_metadata,
+    get_video_transcript
 )
 
 router = APIRouter()
@@ -32,4 +33,9 @@ async def analyze_video(request: AnalyzeRequest):
             detail="Video not found"
         )
 
-    return metadata
+    transcript = get_video_transcript(video_id)
+
+    return {
+        "metadata": metadata,
+        "transcript": transcript
+    }

@@ -57,3 +57,38 @@ def get_video_metadata(video_id: str):
         "likes": statistics.get("likeCount"),
         "comments": statistics.get("commentCount")
     }
+
+
+from youtube_transcript_api import YouTubeTranscriptApi
+
+
+def get_video_transcript(video_id: str):
+
+    try:
+        api = YouTubeTranscriptApi() 
+        transcript_data = api.fetch(video_id)
+
+        transcript_text = " ".join(
+            [item.text for item in transcript_data]
+        )
+
+        segments = []
+
+        for item in transcript_data:
+
+            segments.append({
+                "text": item.text,
+                "start": item.start,
+                "duration": item.duration
+            })
+
+        return {
+        "full_transcript": transcript_text,
+        "segments": segments
+        }
+
+    except Exception as e:
+
+        return {
+            "error": str(e)
+        }
