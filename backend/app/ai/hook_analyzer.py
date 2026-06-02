@@ -1,8 +1,10 @@
 from openai import OpenAI
-
 from app.config import OPENAI_API_KEY
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url="https://openrouter.ai/api/v1"
+)
 
 def analyze_hook(transcript_text: str):
 
@@ -29,7 +31,7 @@ def analyze_hook(transcript_text: str):
     """
 
     response = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="openai/gpt-4o-mini",
         messages=[
             {
                 "role": "user",
