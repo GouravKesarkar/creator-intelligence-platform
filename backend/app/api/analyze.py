@@ -1,6 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.ai.hook_analyzer import analyze_hook
+from app.db.repository import (
+    save_video,
+    save_transcript,
+    save_analysis
+)
+from app.db.repository import get_all_analyses
+
 
 
 from app.youtube.youtube_service import (
@@ -28,6 +35,7 @@ async def analyze_video(request: AnalyzeRequest):
         )
 
     metadata = get_video_metadata(video_id)
+    save_video(metadata)
 
     if not metadata:
         raise HTTPException(
@@ -36,6 +44,11 @@ async def analyze_video(request: AnalyzeRequest):
         )
 
     transcript = get_video_transcript(video_id)
+    if "segments" in transcript:
+        save_transcript(
+            video_id,
+            transcript
+        )
 
     hook_analysis = None
 
@@ -50,9 +63,21 @@ async def analyze_video(request: AnalyzeRequest):
         )
 
         hook_analysis = analyze_hook(hook_text)
+        if hook_analysis:
+            save_analysis(
+                video_id,
+                hook_analysis
+            )
 
     return {
         "metadata": metadata,
         "transcript": transcript,
         "hook_analysis": hook_analysis
     }
+
+
+
+@router.get("/analyses")
+async def analyses():
+
+    return get_all_analyses()
