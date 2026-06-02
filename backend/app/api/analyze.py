@@ -39,9 +39,17 @@ async def analyze_video(request: AnalyzeRequest):
 
     hook_analysis = None
 
-    if "full_transcript" in transcript:
-        first_part = transcript["full_transcript"][:3000]
-        hook_analysis = analyze_hook(first_part)
+    segments = transcript.get("segments", [])
+
+    if segments:
+
+        hook_text = " ".join(
+            segment["text"]
+            for segment in segments
+            if segment["start"] <= 60
+        )
+
+        hook_analysis = analyze_hook(hook_text)
 
     return {
         "metadata": metadata,

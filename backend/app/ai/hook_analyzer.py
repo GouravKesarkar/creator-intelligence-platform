@@ -1,5 +1,6 @@
 from openai import OpenAI
 from app.config import OPENAI_API_KEY
+import json
 
 client = OpenAI(
     api_key=OPENAI_API_KEY,
@@ -11,20 +12,32 @@ def analyze_hook(transcript_text: str):
     prompt = f"""
     You are a YouTube growth expert.
 
-    Analyze the first 60 seconds of this video transcript.
+    Analyze the first 60 seconds of this transcript.
 
-    Evaluate:
-    1. Hook strength
-    2. Curiosity creation
-    3. Emotional engagement
-    4. Clarity
-    5. Viewer retention potential
+    IMPORTANT:
+    Return ONLY valid JSON.
+    Do NOT wrap the JSON in markdown.
+    Do NOT use ```json.
+    Do NOT include explanations outside the JSON.
 
-    Give:
-    - hook score out of 100
-    - strengths
-    - weaknesses
-    - actionable recommendations
+    Schema:
+
+    {{
+        "hook_score": 0-100,
+        "curiosity_score": 0-100,
+        "engagement_score": 0-100,
+        "clarity_score": 0-100,
+        "retention_score": 0-100,
+        "strengths": [
+            "string"
+        ],
+        "weaknesses": [
+            "string"
+        ],
+        "recommendations": [
+            "string"
+        ]
+    }}
 
     Transcript:
     {transcript_text}
@@ -41,4 +54,20 @@ def analyze_hook(transcript_text: str):
         temperature=0.7
     )
 
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    # Remove markdown code fences
+    content = content.replace("```json", "")
+    content = content.replace("```", "")
+    content = content.strip()
+
+    try:
+        return json.loads(content)
+
+    except Exception as e:
+
+        print("JSON PARSE ERROR:", e)
+        print("RAW CONTENT:", content)
+
+        return {
+            "raw_response": content
+        }
