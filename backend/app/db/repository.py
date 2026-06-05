@@ -166,17 +166,22 @@ def get_all_analyses():
         cursor.execute(
             """
             SELECT
-                a.video_id,
+                v.video_id,
                 v.title,
                 v.channel_name,
                 a.hook_score,
                 a.curiosity_score,
                 a.engagement_score,
-                a.created_at
-            FROM analyses a
-            JOIN videos v
-                ON a.video_id = v.video_id
-            ORDER BY a.created_at DESC
+                CASE
+                    WHEN a.video_id IS NULL
+                    THEN 'PENDING'
+                    ELSE 'ANALYZED'
+                END AS status,
+                v.created_at
+            FROM videos v
+            LEFT JOIN analyses a
+                ON v.video_id = a.video_id
+            ORDER BY v.created_at DESC
             """
         )
 
@@ -193,7 +198,8 @@ def get_all_analyses():
                 "hook_score": row[3],
                 "curiosity_score": row[4],
                 "engagement_score": row[5],
-                "created_at": str(row[6])
+                "status": row[6],
+                "created_at": str(row[7])
             })
 
         return results

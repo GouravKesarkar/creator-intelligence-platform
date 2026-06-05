@@ -7,8 +7,9 @@ from app.db.repository import (
     save_analysis
 )
 from app.db.repository import get_all_analyses
-
-
+from app.youtube.comment_service import (
+    get_video_comments
+)
 
 from app.youtube.youtube_service import (
     extract_video_id,
@@ -44,7 +45,10 @@ async def analyze_video(request: AnalyzeRequest):
         )
 
     transcript = get_video_transcript(video_id)
-    if "segments" in transcript:
+    transcript_available = (
+        "segments" in transcript
+    )
+    if transcript_available:
         save_transcript(
             video_id,
             transcript
@@ -72,6 +76,7 @@ async def analyze_video(request: AnalyzeRequest):
     return {
         "metadata": metadata,
         "transcript": transcript,
+        "transcript_available": transcript_available,
         "hook_analysis": hook_analysis
     }
 
@@ -81,3 +86,9 @@ async def analyze_video(request: AnalyzeRequest):
 async def analyses():
 
     return get_all_analyses()
+
+
+@router.get("/comments/{video_id}")
+async def comments(video_id: str):
+
+    return get_video_comments(video_id)

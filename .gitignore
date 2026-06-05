@@ -1,58 +1,38 @@
 # Python
-
-**pycache**/
-*.py[cod]
+__pycache__/
+*.pyc
 *.pyo
 *.pyd
 
 # Virtual Environment
-
 venv/
-.env/
+.venv/
 
 # Environment Variables
-
 .env
 
-# IDE
-
+# VS Code
 .vscode/
-.idea/
+
+# Logs
+*.log
+
+# Python Build
+build/
+dist/
+*.egg-info/
+
+# React / Node
+frontend/node_modules/
+frontend/dist/
 
 # OS Files
-
 .DS_Store
 Thumbs.db
 
-# Logs
-
-*.log
-
-# Pytest / Coverage
-
+# Pytest
 .pytest_cache/
+
+# Coverage
 .coverage
 htmlcov/
-
-# Database
-
-*.db
-*.sqlite3
-
-# Build
-
-dist/
-build/
-
-# Node Modules (future frontend)
-
-node_modules/
-
-# FastAPI
-
-*.pid
-
-# Mac/Linux temp
-
-*.swp
-*.swo
