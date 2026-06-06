@@ -3,6 +3,9 @@ import { getAnalyses } from "../api/creatorApi";
 import StatCard from "../components/StatCard";
 import HookTrendChart
   from "../components/HookTrendChart";
+import {
+  useNavigate
+} from "react-router-dom";
 
 export default function Dashboard() {
 
@@ -31,6 +34,9 @@ export default function Dashboard() {
     videos.length > 0
       ? Math.max(...videos.map(v => v.hook_score || 0))
       : 0;
+
+  const navigate =
+  useNavigate();
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -112,6 +118,11 @@ export default function Dashboard() {
                     hover:bg-gray-50
                     cursor-pointer
                   "
+                  onClick={() =>
+                    navigate(
+                      `/video/${video.video_id}`
+                    )
+                  }
                 >
 
                   <td className="py-3">

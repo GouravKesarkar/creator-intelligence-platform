@@ -154,6 +154,97 @@ def save_analysis(video_id, hook_analysis):
     finally:
         conn.close()
 
+def save_comments(
+    video_id,
+    comments
+):
+
+    conn = get_connection()
+
+    try:
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            DELETE FROM comments
+            WHERE video_id = %s
+            """,
+            (video_id,)
+        )
+
+        for comment in comments:
+
+            cursor.execute(
+                """
+                INSERT INTO comments (
+                    video_id,
+                    comment_text
+                )
+                VALUES (%s,%s)
+                """,
+                (
+                    video_id,
+                    comment
+                )
+            )
+
+        conn.commit()
+
+    finally:
+
+        conn.close()
+
+def save_comment_analysis(
+    video_id,
+    analysis
+):
+
+    conn = get_connection()
+
+    try:
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO comment_analyses (
+
+                video_id,
+                overall_sentiment,
+                analysis_json
+
+            )
+            VALUES (%s,%s,%s)
+
+            ON CONFLICT (video_id)
+            DO UPDATE SET
+
+                overall_sentiment =
+                    EXCLUDED.overall_sentiment,
+
+                analysis_json =
+                    EXCLUDED.analysis_json
+            """,
+            (
+                video_id,
+
+                analysis.get(
+                    "overall_sentiment"
+                ),
+
+                json.dumps(
+                    analysis
+                )
+            )
+        )
+
+        conn.commit()
+
+    finally:
+
+        conn.close()
+
 
 def get_all_analyses():
 
@@ -203,6 +294,98 @@ def get_all_analyses():
             })
 
         return results
+
+    finally:
+
+        conn.close()
+
+def get_video_details(video_id):
+
+    conn = get_connection()
+
+    try:
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                video_id,
+                title,
+                description,
+                channel_name,
+                published_at,
+                thumbnail_url,
+                views,
+                likes,
+                comments
+            FROM videos
+            WHERE video_id = %s
+            """,
+            (video_id,)
+        )
+
+        video_row = cursor.fetchone()
+
+        if not video_row:
+            return None
+
+        video = {
+            "video_id": video_row[0],
+            "title": video_row[1],
+            "description": video_row[2],
+            "channel_name": video_row[3],
+            "published_at": str(video_row[4]),
+            "thumbnail_url": video_row[5],
+            "views": video_row[6],
+            "likes": video_row[7],
+            "comments": video_row[8]
+        }
+
+        # Comment Analysis
+
+        cursor.execute(
+            """
+            SELECT
+                analysis_json
+            FROM comment_analyses
+            WHERE video_id = %s
+            """,
+            (video_id,)
+        )
+
+        comment_row = cursor.fetchone()
+
+        comment_analysis = None
+
+        if comment_row:
+            comment_analysis = comment_row[0]
+
+        # Hook Analysis
+
+        cursor.execute(
+            """
+            SELECT
+                analysis_json
+            FROM analyses
+            WHERE video_id = %s
+            AND analysis_type = 'HOOK'
+            """,
+            (video_id,)
+        )
+
+        hook_row = cursor.fetchone()
+
+        hook_analysis = None
+
+        if hook_row:
+            hook_analysis = hook_row[0]
+
+        return {
+            "video": video,
+            "comment_analysis": comment_analysis,
+            "hook_analysis": hook_analysis
+        }
 
     finally:
 
