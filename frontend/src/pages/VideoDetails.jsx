@@ -215,7 +215,7 @@ export default function VideoDetails() {
               font-bold
               mb-6
             ">
-              Audience Intelligence
+              Comments Analysis
             </h2>
 
             <div className="mb-6">
@@ -271,57 +271,244 @@ export default function VideoDetails() {
 
             </div>
 
-            {/* Viewer Questions */}
+            {/* Audience Details */}
 
-            <div className="mb-6">
+<div className="
+  grid
+  md:grid-cols-2
+  gap-6
+  mb-6
+">
 
-              <h3 className="
+  {/* Viewer Questions */}
+
+            <div>
+
+                <h3 className="
                 text-lg
                 font-bold
                 mb-3
-              ">
+                ">
                 Viewer Questions
-              </h3>
+                </h3>
 
-              <ul className="
+                <ul className="
                 list-disc
                 pl-5
-              ">
+                space-y-2
+                ">
 
                 {commentAnalysis.viewer_questions?.map(
-                  (question, index) => (
+                    (question, index) => (
                     <li key={index}>
-                      {question}
+                        {question}
                     </li>
-                  )
+                    )
                 )}
 
-              </ul>
+                </ul>
 
             </div>
+
+            {/* Content Requests */}
+
+            <div>
+
+                <h3 className="
+                text-lg
+                font-bold
+                mb-3
+                ">
+                Content Requests
+                </h3>
+
+                <ul className="
+                list-disc
+                pl-5
+                space-y-2
+                ">
+
+                {commentAnalysis.content_requests?.map(
+                    (request, index) => (
+                    <li key={index}>
+                        {request}
+                    </li>
+                    )
+                )}
+
+                </ul>
+
+            </div>
+
+            </div>
+
+            {/* Positive / Negative Feedback */}
+
+            <div className="
+            grid
+            md:grid-cols-2
+            gap-6
+            mb-6
+            ">
+
+            {/* Positive */}
+
+            <div>
+
+                <h3 className="
+                text-lg
+                font-bold
+                text-green-700
+                mb-3
+                ">
+                Positive Feedback
+                </h3>
+
+                <div className="
+                space-y-2
+                ">
+
+                {commentAnalysis.positive_feedback?.map(
+                    (item, index) => (
+
+                    <div
+                        key={index}
+                        className="
+                        bg-green-50
+                        border
+                        border-green-200
+                        rounded-lg
+                        p-3
+                        "
+                    >
+                        ✅ {item}
+                    </div>
+
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+            {/* Negative */}
+
+            <div>
+
+                <h3 className="
+                text-lg
+                font-bold
+                text-red-700
+                mb-3
+                ">
+                Negative Feedback
+                </h3>
+
+                <div className="
+                space-y-2
+                ">
+
+                {commentAnalysis.negative_feedback?.map(
+                    (item, index) => (
+
+                    <div
+                        key={index}
+                        className="
+                        bg-red-50
+                        border
+                        border-red-200
+                        rounded-lg
+                        p-3
+                        "
+                    >
+                        ⚠️ {item}
+                    </div>
+
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+            </div>
+
+            {/* Next Video Ideas */}
+
+                <div className="mb-6">
+
+                <h3 className="
+                    text-lg
+                    font-bold
+                    mb-3
+                ">
+                    Recommended Next Videos
+                </h3>
+
+                <div className="
+                    space-y-3
+                ">
+
+                    {commentAnalysis.next_video_ideas?.map(
+                    (idea, index) => (
+
+                        <div
+                        key={index}
+                        className="
+                            bg-blue-50
+                            border
+                            border-blue-200
+                            rounded-lg
+                            p-4
+                        "
+                        >
+
+                        <div className="
+                            font-semibold
+                            text-blue-900
+                            mb-1
+                        ">
+                            {idea.title}
+                        </div>
+
+                        <div className="
+                            text-sm
+                            text-gray-600
+                        ">
+                            {idea.reason}
+                        </div>
+
+                        </div>
+
+                    )
+                    )}
+
+                </div>
+
+                </div>
 
             {/* Summary */}
 
             <div>
 
-              <h3 className="
+            <h3 className="
                 text-lg
                 font-bold
                 mb-3
-              ">
+            ">
                 AI Summary
-              </h3>
+            </h3>
 
-              <div className="
+            <div className="
                 bg-slate-50
                 p-4
                 rounded-lg
-              ">
+                border
+            ">
                 {commentAnalysis.summary}
-              </div>
-
             </div>
 
+            </div>
           </div>
 
         )}

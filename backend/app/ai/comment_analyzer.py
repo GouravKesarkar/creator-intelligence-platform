@@ -17,6 +17,16 @@ def analyze_comments(comments):
     You are a YouTube audience intelligence expert.
 
     Analyze these YouTube comments.
+    Based on audience interests,
+    questions and requests,
+    suggest 3-5 future video ideas.
+
+    The ideas should be highly relevant
+    to what viewers are asking for.
+
+    Each idea must include:
+    - title
+    - reason
 
     IMPORTANT:
     Return ONLY valid JSON.
@@ -47,6 +57,13 @@ def analyze_comments(comments):
 
         "negative_feedback": [
             "string"
+        ],
+
+        "next_video_ideas": [
+            {{
+                "title": "string",
+                "reason": "string"
+            }}
         ],
 
         "summary": ""
